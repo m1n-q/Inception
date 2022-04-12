@@ -1,0 +1,52 @@
+version: '3' #what version?
+
+volumes:
+  wp-assets:
+
+services:
+  mariadb:
+    build: ./requirements/mariadb
+    environment:
+      - MYSQL_ROOT_HOST=${MYSQL_ROOT_HOST}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+
+    ports:
+      - "127.0.0.1:3306:3306"
+      - "127.0.0.1:9999:9999" # test
+
+  wordpress:
+    environment:
+      - WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST}
+      - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
+      - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
+      - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}
+      - WORDPRESS_TABLE_PREFIX=${WORDPRESS_TABLE_PREFIX}
+      - WORDPRESS_AUTH_KEY=${WORDPRESS_AUTH_KEY}
+      - WORDPRESS_SECURE_AUTH_KEY=${WORDPRESS_SECURE_AUTH_KEY}
+      - WORDPRESS_LOGGED_IN_KEY=${WORDPRESS_LOGGED_IN_KEY}
+      - WORDPRESS_NONCE_KEY=${WORDPRESS_NONCE_KEY}
+      - WORDPRESS_AUTH_SALT=${WORDPRESS_AUTH_SALT}
+      - WORDPRESS_SECURE_AUTH_SALT=${WORDPRESS_SECURE_AUTH_SALT}
+      - WORDPRESS_LOGGED_IN_SALT=${WORDPRESS_LOGGED_IN_SALT}
+      - WORDPRESS_NONCE_SALT=${WORDPRESS_NONCE_SALT}
+    volumes:
+      - wp-assets:/var/wp-assets
+    build: ./requirements/wordpress
+    ports:
+      # host_port == 127.0.0.1:9000, allow only localhost
+      - "127.0.0.1:9000:9000"
+
+  nginx:
+    #    image: nginx:latest
+    depends_on: 
+      - wordpress
+    volumes:
+      - wp-assets:/var/wp-assets
+    build: ./requirements/nginx
+    ports:
+      # host_port == 0.0.0.0:8080, allow all interfaces
+      - "8080:80"
+

@@ -1,0 +1,37 @@
+# nginx
+apt update && apt install -y nginx
+service nginx start
+
+# /etc/nginx/nginx.conf
+# /etc/nginx/sites-available/default
+
+index index.php index.html index.htm index.nginx-debian.html;
+
+location ~ \.php$ {
+	include snippets/fastcgi-php.conf;
+	fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
+	#fastcgi_pass x.x.x.x:9000
+}
+
+
+
+# mariaDB
+apt update && apt install -y mariadb-server
+service mysql start
+
+
+CREATE DATABASE <DBname>;
+CREATE USER '<username>'@'localhost' IDENTIFIED BY '<password>';
+GRANT ALL ON <DBname>.* TO '<username>'@'localhost' IDENTIFIED BY '<password>' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+EXIT;
+
+
+# wordpress
+apt install -y wget php-fpm php-mysql
+wget -O /tmp/wordpress.tar.gz "http://wordpress.org/latest.tar.gz"
+tar -xvzf /tmp/wordpress.tar.gz -C /var/www/html
+
+# /etc/php/7.3/fpm/pool.d/www.conf
+listen = 9000
+service php7.3-fpm start
