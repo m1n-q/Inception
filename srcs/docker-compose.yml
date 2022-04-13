@@ -2,6 +2,9 @@ version: '3' #what version?
 
 volumes:
   wp-assets:
+networks:
+  mynet:
+    driver: bridge
 
 services:
   mariadb:
@@ -12,10 +15,11 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-
+  
+    networks:
+      - mynet
     ports:
       - "127.0.0.1:3306:3306"
-      - "127.0.0.1:9999:9999" # test
 
   wordpress:
     environment:
@@ -35,9 +39,11 @@ services:
     volumes:
       - wp-assets:/var/wp-assets
     build: ./requirements/wordpress
-    ports:
+    #    ports:
       # host_port == 127.0.0.1:9000, allow only localhost
-      - "127.0.0.1:9000:9000"
+      # - "127.0.0.1:9000:9000"
+    networks:
+      - mynet
 
   nginx:
     #    image: nginx:latest
@@ -47,6 +53,7 @@ services:
       - wp-assets:/var/wp-assets
     build: ./requirements/nginx
     ports:
-      # host_port == 0.0.0.0:8080, allow all interfaces
+      # host_port == 0.0.0.0:8080, allow all host's interfaces
       - "8080:80"
-
+    networks:
+      - mynet
