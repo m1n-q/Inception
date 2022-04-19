@@ -1,0 +1,40 @@
+<?php
+
+
+
+sed -e "s/.*'DB_NAME'.*/define( 'DB_NAME', '$WORDPRESS_DB_NAME' );" \
+sed -e "s/.*'DB_USER'.*/define( 'DB_USER', '$WORDPRESS_DB_USER' );" \
+sed -e "s/.*'DB_PASSWORD'.*/define( 'DB_PASSWORD', '$WORDPRESS_DB_PASSWORD' );" \
+sed -e "s/.*'DB_HOST'.*/define( 'DB_HOST', '$WORDPRESS_DB_HOST' );" \
+
+
+
+
+sed -e "s/.*'AUTH_KEY'.*/define( 'AUTH_KEY',         '$WORDPRESS_AUTH_KEY' );";
+sed -e "s/.*'SECURE_AUTH_KEY'.*/define( 'SECURE_AUTH_KEY',  '$WORDPRESS_SECURE_AUTH_KEY' );";
+sed -e "s/.*'LOGGED_IN_KEY'.*/define( 'LOGGED_IN_KEY',    '$WORDPRESS_LOGGED_IN_KEY' );";
+sed -e "s/.*'NONCE_KEY'.*/define( 'NONCE_KEY',        '$WORDPRESS_NONCE_KEY' );";
+sed -e "s/.*'AUTH_SALT'.*/define( 'AUTH_SALT',        '$WORDPRESS_AUTH_SALT' );";
+sed -e "s/.*'SECURE_AUTH_SALT'.*/define( 'SECURE_AUTH_SALT', '$WORDPRESS_SECURE_AUTH_SALT' );";
+sed -e "s/.*'LOGGED_IN_SALT'.*/define( 'LOGGED_IN_SALT',   '$WORDPRESS_LOGGED_IN_SALT' );";
+sed -e "s/.*'NONCE_SALT'.*/define( 'NONCE_SALT',       '$WORDPRESS_NONCE_SALT' );";
+
+
+$table_prefix = 'wp_';
+
+
+define( 'WP_DEBUG', false );
+
+/* Add any custom values between this line and the "stop editing" line. */
+
+
+/* That's all, stop editing! Happy publishing. */
+
+/** Absolute path to the WordPress directory. */
+if ( ! defined( 'ABSPATH' ) ) {
+	define( 'ABSPATH', __DIR__ . '/' );
+}
+
+/** Sets up WordPress vars and included files. */
+require_once ABSPATH . 'wp-settings.php';
+

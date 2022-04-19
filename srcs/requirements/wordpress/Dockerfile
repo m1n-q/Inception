@@ -7,10 +7,12 @@ RUN apt update && \
 	rm /tmp/wordpress.tar.gz
 
 RUN sed -e 's/\/run\/php\/php7.3-fpm.sock/9000/' \
+		-e 's/;clear_env/clear_env/' \
 		-i '/etc/php/7.3/fpm/pool.d/www.conf'
 
 RUN	mkdir /var/run/php
 
+COPY wp-config.php /
 COPY docker-entrypoint.sh /
 RUN	chmod +x /docker-entrypoint.sh
 
