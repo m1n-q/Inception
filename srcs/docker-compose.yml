@@ -1,7 +1,9 @@
 version: '3' #what version?
 
 volumes:
-  wp-assets:
+  wp_volume:
+    #  db-volume:
+
 networks:
   mynet:
     driver: bridge
@@ -16,7 +18,7 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-  
+
     networks:
       - mynet
     hostname: mariadb
@@ -39,8 +41,16 @@ services:
       - WORDPRESS_SECURE_AUTH_SALT=${WORDPRESS_SECURE_AUTH_SALT}
       - WORDPRESS_LOGGED_IN_SALT=${WORDPRESS_LOGGED_IN_SALT}
       - WORDPRESS_NONCE_SALT=${WORDPRESS_NONCE_SALT}
+
+      - WP_VOLUME=${WP_VOLUME}
+      - WORDPRESS_URL=${WORDPRESS_URL}
+      - WORDPRESS_USER_NAME=${WORDPRESS_USER_NAME}
+      - WORDPRESS_USER_PASSWORD=${WORDPRESS_USER_PASSWORD}
+      - WORDPRESS_USER_EMAIL=${WORDPRESS_USER_EMAIL}
+    depends_on:
+      - mariadb
     volumes:
-      - wp-assets:/var/wp-assets
+      - wp_volume:${WP_VOLUME}
     build: ./requirements/wordpress
     #    ports:
       # host_port == 127.0.0.1:9000, allow only localhost
@@ -51,15 +61,18 @@ services:
     container_name: wordpress
 
   nginx:
+    environment:
+      - WP_VOLUME=${WP_VOLUME}
     #    image: nginx:latest
-    depends_on: 
+    depends_on:
       - wordpress
     volumes:
-      - wp-assets:/var/wp-assets
+      - wp_volume:${WP_VOLUME}
     build: ./requirements/nginx
     ports:
       # host_port == 0.0.0.0:8080, allow all host's interfaces
-      - "8080:80"
+      # - "8080:80"
+      - "80:80"
     networks:
       - mynet
     hostname: nginx
