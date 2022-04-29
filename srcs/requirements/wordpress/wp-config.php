@@ -26,9 +26,7 @@
 // a helper function to lookup "env_FILE", "env", then fallback
 if (!function_exists('getenv_with_fallback')) {
 	function getenv_with_fallback($env, $default) {
-//		if ($fileEnv = getenv($env . '_FILE')) {
-//			return rtrim(file_get_contents($fileEnv), "\r\n");
-//		}
+
 		if (($val = getenv($env)) !== false) {
 			return $val;
 		}

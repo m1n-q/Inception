@@ -3,21 +3,22 @@ version: '3' #what version?
 volumes:
   wp_volume:
     #  db-volume:
-
 networks:
   mynet:
     driver: bridge
     name: mynet
-
 services:
   mariadb:
     build: ./requirements/mariadb
     environment:
+      - MYSQL_BIND_ADDRESS=${MYSQL_BIND_ADDRESS}
+      - MYSQL_PORT=${MYSQL_PORT}
       - MYSQL_ROOT_HOST=${MYSQL_ROOT_HOST}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_REMOTE_HOST=${MYSQL_REMOTE_HOST}
 
     networks:
       - mynet
@@ -25,9 +26,10 @@ services:
     container_name: mariadb
     ports:
       - "127.0.0.1:3306:3306"
-
   wordpress:
     environment:
+      - PHP_FPM_PORT=${PHP_FPM_PORT}
+
       - WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST}
       - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
       - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
@@ -63,7 +65,11 @@ services:
   nginx:
     environment:
       - WP_VOLUME=${WP_VOLUME}
-    #    image: nginx:latest
+      - NGINX_ROOT_PATH=${NGINX_ROOT_PATH}
+      # - NGINX_SERVER_NAME=${NGINX_SERVER_NAME}
+      - NGINX_FASTCGI_HOST=${NGINX_FASTCGI_HOST}
+      - NGINX_FASTCGI_PORT=${NGINX_FASTCGI_PORT}
+
     depends_on:
       - wordpress
     volumes:
