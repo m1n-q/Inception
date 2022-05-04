@@ -2,7 +2,7 @@ version: '3' #what version?
 
 volumes:
   wp_volume:
-    #  db-volume:
+  db-volume:
 networks:
   mynet:
     driver: bridge
@@ -11,6 +11,9 @@ services:
   mariadb:
     build: ./requirements/mariadb
     environment:
+      - DB_VOLUME=${DB_VOLUME}
+
+      - MYSQL_DATADIR=${MYSQL_DATADIR}
       - MYSQL_BIND_ADDRESS=${MYSQL_BIND_ADDRESS}
       - MYSQL_PORT=${MYSQL_PORT}
       - MYSQL_ROOT_HOST=${MYSQL_ROOT_HOST}
@@ -55,8 +58,8 @@ services:
       - wp_volume:${WP_VOLUME}
     build: ./requirements/wordpress
     #    ports:
-      # host_port == 127.0.0.1:9000, allow only localhost
-      # - "127.0.0.1:9000:9000"
+      #  127.0.0.1:9000, allow only localhost
+      #  "127.0.0.1:9000:9000"
     networks:
       - mynet
     hostname: wordpress
@@ -66,7 +69,8 @@ services:
     environment:
       - WP_VOLUME=${WP_VOLUME}
       - NGINX_ROOT_PATH=${NGINX_ROOT_PATH}
-      # - NGINX_SERVER_NAME=${NGINX_SERVER_NAME}
+      - NGINX_SERVER_NAME=${NGINX_SERVER_NAME}
+      - NGINX_USE_FASTCGI=${NGINX_USE_FASTCGI}
       - NGINX_FASTCGI_HOST=${NGINX_FASTCGI_HOST}
       - NGINX_FASTCGI_PORT=${NGINX_FASTCGI_PORT}
 
@@ -76,9 +80,9 @@ services:
       - wp_volume:${WP_VOLUME}
     build: ./requirements/nginx
     ports:
-      # host_port == 0.0.0.0:8080, allow all host's interfaces
+      #  0.0.0.0:8080, allow all host's interfaces
       # - "8080:80"
-      - "80:80"
+      - "443:443"
     networks:
       - mynet
     hostname: nginx
