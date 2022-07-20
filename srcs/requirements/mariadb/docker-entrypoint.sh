@@ -37,6 +37,8 @@ fi
 if [[ -n ${MYSQL_DATADIR} ]]; then
 	echo "set datadir to ${MYSQL_DATADIR} . . .";
 	echo "datadir=${MYSQL_DATADIR}" >> /etc/mysql/my.cnf;
+
+	#* init datadir
 	if [ ! -e ${MYSQL_DATADIR} ]; then
 		echo "moving to new datadir . . . ";
 		# echo "log_error=mariadb.err" >> /etc/mysql/my.cnf;
@@ -61,9 +63,11 @@ for i in {10..0}; do
 done
 if [ "$i" = 0 ]; then
  	echo "cannot start mariaDB server" >&2;
+	exit;
 fi
 
 
+#* set root passwd
 if [ ! -z ${MYSQL_ROOT_PASSWORD} ]; then
 	default_if_empty "MYSQL_ROOT_HOST"		"localhost";
 	process_sql "ALTER USER 'root'@'$MYSQL_ROOT_HOST' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD'; FLUSH PRIVILEGES;"
@@ -71,13 +75,15 @@ fi
 
 
 
-#* create db, user
+#* create db
 default_if_empty "MYSQL_DATABASE" "defaultdb"
 if [[ ! $($mysql_client -e "SHOW DATABASES LIKE \"${MYSQL_DATABASE}\";") ]]; then
 	echo "Creating DB: ${MYSQL_DATABASE}"
 	process_sql "CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE}"
 fi
 
+
+#* create user, give access to db
 default_if_empty "MYSQL_USER"			"defaultuser";
 default_if_empty "MYSQL_PASSWORD" 		"defaultpw";
 default_if_empty "MYSQL_REMOTE_HOST" 	"%";
@@ -87,7 +93,6 @@ if [[ ! $($mysql_client -e "SELECT user FROM user WHERE user=\"${MYSQL_USER}\";"
 	echo "Giving user ${MYSQL_USER} access to schema ${MYSQL_DATABASE}"
 	process_sql	"GRANT ALL ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'${MYSQL_REMOTE_HOST}';"
 fi
-
 
 
 #* shutdown temp MariaDB server

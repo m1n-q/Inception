@@ -29,6 +29,7 @@ services:
     container_name: mariadb
     ports:
       - "127.0.0.1:3306:3306"
+#. -------------------------------------------------------------------------- .#
   wordpress:
     environment:
       - PHP_FPM_PORT=${PHP_FPM_PORT}
@@ -64,7 +65,7 @@ services:
       - mynet
     hostname: wordpress
     container_name: wordpress
-
+#. -------------------------------------------------------------------------- .#
   nginx:
     environment:
       - WP_VOLUME=${WP_VOLUME}
