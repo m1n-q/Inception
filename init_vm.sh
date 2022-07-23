@@ -5,8 +5,12 @@ sudo apt-get install -y vim
 
 
 # install docker
+
 #    ca-certificates \
 #    gnupg \
 #    lsb-release
-
 curl -fsSL https://get.docker.com -o ~/get_docker.sh && chmod u+o ~/get_docker.sh && ~/get_docker.sh;
+
+# install docker-compose
+
+# sudo apt-get install docker-compose-plugin

@@ -1,12 +1,29 @@
-version: '3' #what version?
+version: '3'
 
 volumes:
   wp_volume:
-  db-volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${HOST_VOLUME}/wp
+    external: false
+
+  db_volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${HOST_VOLUME}/db
+    external: false
+
+
 networks:
   mynet:
     driver: bridge
     name: mynet
+
+
 services:
   mariadb:
     build: ./requirements/mariadb
@@ -22,7 +39,9 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_REMOTE_HOST=${MYSQL_REMOTE_HOST}
-
+    volumes:
+      - db_volume:${DB_VOLUME}
+      # - ${HOST_VOLUME}/db:${DB_VOLUME}
     networks:
       - mynet
     hostname: mariadb
@@ -57,6 +76,7 @@ services:
       - mariadb
     volumes:
       - wp_volume:${WP_VOLUME}
+      # - ${HOST_VOLUME}/wp:${WP_VOLUME}
     build: ./requirements/wordpress
     #    ports:
       #  127.0.0.1:9000, allow only localhost
@@ -79,6 +99,7 @@ services:
       - wordpress
     volumes:
       - wp_volume:${WP_VOLUME}
+      # - ${HOST_VOLUME}/wp:${WP_VOLUME}
     build: ./requirements/nginx
     ports:
       #  0.0.0.0:8080, allow all host's interfaces
