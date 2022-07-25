@@ -9,9 +9,9 @@ sudo apt-get install -y vim
 #    ca-certificates \
 #    gnupg \
 #    lsb-release
-curl -fsSL https://get.docker.com -o ~/get_docker.sh && chmod u+o ~/get_docker.sh && ~/get_docker.sh;
+sudo curl -fsSL https://get.docker.com -o ~/get_docker.sh && chmod u+o ~/get_docker.sh && ~/get_docker.sh;
 
 # install docker-compose
 
-curl -SL https://github.com/docker/compose/releases/download/v2.7.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose;
+sudo curl -SL https://github.com/docker/compose/releases/download/v2.7.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose && sudo chmod +x /usr/local/bin/docker-compose;
 sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose;

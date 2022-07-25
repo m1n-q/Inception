@@ -2,18 +2,19 @@
 HOSTNAME = mishin.42.fr
 
 start: sethost
-	docker-compose up -d
+	sudo docker-compose up -d
 
 # down will prune networks
 stop:
-	docker-compose stop
+	sudo docker-compose stop
 
 clean:
-	docker-compose down
-	docker image prune --all
+	sudo docker-compose down
+	sudo docker image prune --all
 
 fclean: clean
-	docker system prune --volumes
+	sudo docker-compose down --volumes
+	sudo docker system prune --volumes
 
 re: fclean start
 

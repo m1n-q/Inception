@@ -1,28 +1,4 @@
-version: '3'
-
-volumes:
-  wp_volume:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ${HOST_VOLUME}/wp
-    external: false
-
-  db_volume:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ${HOST_VOLUME}/db
-    external: false
-
-
-networks:
-  mynet:
-    driver: bridge
-    name: mynet
-
+version: '2'
 
 services:
   mariadb:
@@ -109,3 +85,25 @@ services:
       - mynet
     hostname: nginx
     container_name: nginx
+
+
+volumes:
+  wp_volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${HOST_VOLUME}/wp
+
+  db_volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${HOST_VOLUME}/db
+
+
+networks:
+  mynet:
+    driver: bridge
+    name: mynet
