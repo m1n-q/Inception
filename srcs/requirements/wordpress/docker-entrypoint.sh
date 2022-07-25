@@ -53,7 +53,7 @@ if [ ! -e "$WP_VOLUME/wordpress/wp-config.php" ]; then
 	default_if_empty "WORDPRESS_USER_EMAIL"		"wpuser@wp.com"
 
 	#. wait for mariadb
-	while ! mysqladmin ping -h"$WORDPRESS_DB_HOST" -u $WORDPRESS_DB_USER -P$WORDPRESS_DB_PORT -p$WORDPRESS_DB_PASSWORD --silent; do
+	while ! mysqladmin ping -h"$WORDPRESS_DB_HOST" -u $WORDPRESS_DB_USER -P"$WORDPRESS_DB_PORT" -p$WORDPRESS_DB_PASSWORD --silent; do
 		echo "Waiting for mariaDB server...";
 		sleep 1;
 	done
