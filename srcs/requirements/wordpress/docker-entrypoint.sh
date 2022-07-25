@@ -24,6 +24,7 @@ default_if_empty() {
 error_if_empty "WORDPRESS_DB_HOST"
 error_if_empty "WORDPRESS_DB_NAME"
 error_if_empty "WORDPRESS_DB_USER"
+error_if_empty "WORDPRESS_DB_PORT"
 error_if_empty "WORDPRESS_DB_PASSWORD"
 error_if_empty "WORDPRESS_AUTH_KEY"
 error_if_empty "WORDPRESS_SECURE_AUTH_KEY"
@@ -46,7 +47,6 @@ default_if_empty "WP_VOLUME"				"/var/www/html"
 
 if [ ! -e "$WP_VOLUME/wordpress/wp-config.php" ]; then
 
-	default_if_empty "PHP_FPM_PORT"				"/run/php/php7.3-fpm.sock"
 	default_if_empty "WORDPRESS_URL"			"http://localhost"
 	default_if_empty "WORDPRESS_USER_NAME"		"wpuser"
 	default_if_empty "WORDPRESS_USER_PASSWORD"	"wppw"
@@ -78,6 +78,8 @@ fi
 
 
 #. php-fpm: unix domain socket -> port
+default_if_empty "PHP_FPM_PORT"				"/run/php/php7.3-fpm.sock"
+
 sed -e "s|/run/php/php7.3-fpm.sock|${PHP_FPM_PORT}|" \
 	-e "s/;clear_env/clear_env/" \
 	-i "/etc/php/7.3/fpm/pool.d/www.conf";
