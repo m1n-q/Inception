@@ -17,13 +17,14 @@ services:
       - MYSQL_REMOTE_HOST=${MYSQL_REMOTE_HOST}
     volumes:
       - db_volume:${DB_VOLUME}
-      # - ${HOST_VOLUME}/db:${DB_VOLUME}
     networks:
       - mynet
     hostname: mariadb
     container_name: mariadb
     ports:
       - "127.0.0.1:3306:3306"
+      #  0.0.0.0:3306 will allow all host's interfaces
+    restart: always
 #. -------------------------------------------------------------------------- .#
   wordpress:
     environment:
@@ -53,15 +54,12 @@ services:
       - mariadb
     volumes:
       - wp_volume:${WP_VOLUME}
-      # - ${HOST_VOLUME}/wp:${WP_VOLUME}
     build: ./requirements/wordpress
-    #    ports:
-      #  127.0.0.1:9000, allow only localhost
-      #  "127.0.0.1:9000:9000"
     networks:
       - mynet
     hostname: wordpress
     container_name: wordpress
+    restart: always
 #. -------------------------------------------------------------------------- .#
   nginx:
     environment:
@@ -76,17 +74,15 @@ services:
       - wordpress
     volumes:
       - wp_volume:${WP_VOLUME}
-      # - ${HOST_VOLUME}/wp:${WP_VOLUME}
     build: ./requirements/nginx
     ports:
-      #  0.0.0.0:8080, allow all host's interfaces
-      # - "8080:80"
       - "443:443"
     networks:
       - mynet
     hostname: nginx
     container_name: nginx
-
+    restart: always
+#. -------------------------------------------------------------------------- .#
 
 volumes:
   wp_volume:
