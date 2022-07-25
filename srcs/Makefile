@@ -2,7 +2,7 @@ DBVOLUME = /home/mishin/data/db
 WPVOLUME = /home/mishin/data/wp
 HOSTNAME = mishin.42.fr
 
-start: sethost
+start: mkdir sethost
 	sudo docker-compose up -d
 
 # down will prune networks
