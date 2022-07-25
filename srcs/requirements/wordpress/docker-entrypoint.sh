@@ -52,13 +52,8 @@ if [ ! -e "$WP_VOLUME/wordpress/wp-config.php" ]; then
 	default_if_empty "WORDPRESS_USER_PASSWORD"	"wppw"
 	default_if_empty "WORDPRESS_USER_EMAIL"		"wpuser@wp.com"
 
-	#. php-fpm: unix domain socket -> port
-	sed -e "s|/run/php/php7.3-fpm.sock|${PHP_FPM_PORT}|" \
-		-e "s/;clear_env/clear_env/" \
-		-i "/etc/php/7.3/fpm/pool.d/www.conf";
-
 	#. wait for mariadb
-	while ! mysqladmin ping -h"$WORDPRESS_DB_HOST" -u $WORDPRESS_DB_USER -P3306 -p$WORDPRESS_DB_PASSWORD --silent; do
+	while ! mysqladmin ping -h"$WORDPRESS_DB_HOST" -u $WORDPRESS_DB_USER -P$WORDPRESS_DB_PORT -p$WORDPRESS_DB_PASSWORD --silent; do
 		echo "Waiting for mariaDB server...";
 		sleep 1;
 	done
@@ -80,5 +75,11 @@ else
 	wp core install --url=$WORDPRESS_URL --title=$WORDPRESS_TITLE --admin_user=$WORDPRESS_USER_NAME --admin_password=$WORDPRESS_USER_PASSWORD --admin_email=$WORDPRESS_USER_EMAIL --path=$WP_VOLUME/wordpress/ --allow-root;
 	wp theme activate twentytwenty --path=$WP_VOLUME/wordpress/ --allow-root;
 fi
+
+
+#. php-fpm: unix domain socket -> port
+sed -e "s|/run/php/php7.3-fpm.sock|${PHP_FPM_PORT}|" \
+	-e "s/;clear_env/clear_env/" \
+	-i "/etc/php/7.3/fpm/pool.d/www.conf";
 
 exec /usr/sbin/php-fpm7.3 --nodaemonize
