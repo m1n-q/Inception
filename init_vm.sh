@@ -13,4 +13,5 @@ curl -fsSL https://get.docker.com -o ~/get_docker.sh && chmod u+o ~/get_docker.s
 
 # install docker-compose
 
-# sudo apt-get install docker-compose-plugin
+curl -SL https://github.com/docker/compose/releases/download/v2.7.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose;
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose;
