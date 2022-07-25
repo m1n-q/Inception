@@ -1,4 +1,5 @@
-
+DBVOLUME = /home/mishin/data/db
+WPVOLUME = /home/mishin/data/wp
 HOSTNAME = mishin.42.fr
 
 start: sethost
@@ -27,3 +28,18 @@ ifeq ($(shell grep '$(HOSTNAME)'  /etc/hosts), )
 else
 	@echo "host name already configured"
 endif
+
+mkdir:
+ifeq (,$(wildcard $(DBVOLUME)))
+	@echo "make DB volume directory";
+	@mkdir -p $(DBVOLUME)
+else
+	@echo "DB volume already exists";
+endif
+ifeq (,$(wildcard $(WPVOLUME)))
+	@echo "make Wordpress volume directory";
+	@mkdir -p $(WPVOLUME)
+else
+	@echo "Wordpress volume already exists";
+endif
+
