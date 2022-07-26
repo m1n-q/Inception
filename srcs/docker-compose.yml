@@ -25,6 +25,7 @@ services:
       - "127.0.0.1:3306:3306"
       #  0.0.0.0:3306 will allow all host's interfaces
     restart: always
+    init: true
 #. -------------------------------------------------------------------------- .#
   wordpress:
     environment:
@@ -60,6 +61,7 @@ services:
     hostname: wordpress
     container_name: wordpress
     restart: always
+    init: true
 #. -------------------------------------------------------------------------- .#
   nginx:
     environment:
@@ -82,6 +84,7 @@ services:
     hostname: nginx
     container_name: nginx
     restart: always
+    init: true
 #. -------------------------------------------------------------------------- .#
 
 volumes:
