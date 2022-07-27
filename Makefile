@@ -16,7 +16,7 @@ clean:
 	sudo docker image prune --all
 
 fclean: clean
-	sudo docker-compose down -f $(COMPOSE_FILE) --volumes
+	sudo docker-compose -f $(COMPOSE_FILE) down --volumes
 	sudo docker system prune --volumes
 
 re: fclean start
