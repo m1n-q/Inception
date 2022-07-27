@@ -1,20 +1,22 @@
-DBVOLUME = /home/mishin/data/db
-WPVOLUME = /home/mishin/data/wp
+HOST_VOLUME_DIR = /home/mishin/data
+DB_VOLUME = $(HOST_VOLUME_DIR)/db
+WP_VOLUME = $(HOST_VOLUME_DIR)/wp
+COMPOSE_FILE = srcs/docker-compose.yml
 HOSTNAME = mishin.42.fr
 
 start: mkdir sethost
-	sudo docker-compose up -d
+	sudo docker-compose -f $(COMPOSE_FILE) up -d
 
 # down will prune networks
 stop:
-	sudo docker-compose stop
+	sudo docker-compose -f $(COMPOSE_FILE) stop
 
 clean:
-	sudo docker-compose down
+	sudo docker-compose -f $(COMPOSE_FILE) down
 	sudo docker image prune --all
 
 fclean: clean
-	sudo docker-compose down --volumes
+	sudo docker-compose down -f $(COMPOSE_FILE) --volumes
 	sudo docker system prune --volumes
 
 re: fclean start
@@ -30,15 +32,15 @@ else
 endif
 
 mkdir:
-ifeq (,$(wildcard $(DBVOLUME)))
+ifeq (,$(wildcard $(DB_VOLUME)))
 	@echo "make DB volume directory";
-	@mkdir -p $(DBVOLUME)
+	@mkdir -p $(DB_VOLUME)
 else
 	@echo "DB volume already exists";
 endif
-ifeq (,$(wildcard $(WPVOLUME)))
+ifeq (,$(wildcard $(WP_VOLUME)))
 	@echo "make Wordpress volume directory";
-	@mkdir -p $(WPVOLUME)
+	@mkdir -p $(WP_VOLUME)
 else
 	@echo "Wordpress volume already exists";
 endif
