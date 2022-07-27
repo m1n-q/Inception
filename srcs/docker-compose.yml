@@ -21,8 +21,8 @@ services:
       - mynet
     hostname: mariadb
     container_name: mariadb
-    ports:
-      - "127.0.0.1:3306:3306"
+    # ports:
+     # - "127.0.0.1:3306:3306"
       #  0.0.0.0:3306 will allow all host's interfaces
     restart: always
     init: true
