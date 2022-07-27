@@ -67,7 +67,7 @@ fi
 
 installed=$(wp cache get is_blog_installed --allow-root --path=$WP_VOLUME/wordpress --quiet 2>/dev/null)
 
-if [ $installed -eq 1 ]; then
+if [ ! -z $installed ] && [ $installed -eq 1 ]; then
 	echo "wordpress already installed."
 else
 	echo "installing wordpress..."
